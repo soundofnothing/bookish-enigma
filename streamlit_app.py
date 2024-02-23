@@ -70,7 +70,7 @@ def euclidean_division(a, b):
 """)
 
 # Depth input area
-depth_input = st.slider("Select AST Depth", min_value=1, max_value=5, value=2)
+depth_input = st.slider("Select AST Depth", min_value=1, max_value=22, value=2)
 
 # Button to visualize the AST graph
 if st.button("Visualize AST"):
