@@ -4,4 +4,5 @@ igraph
 networkx
 matplotlib
 cryptography
+graphviz
 streamlit
