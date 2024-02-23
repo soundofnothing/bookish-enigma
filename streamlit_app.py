@@ -47,7 +47,9 @@ def visualize_ast(code, depth=2):
     
     plt.figure(figsize=(10, 6))
     nx.draw(ast_graph, pos, with_labels=True, labels=get_node_labels(ast_graph), font_size=8, font_color="black", font_weight="bold", arrowsize=10)
-    plt.show()
+
+    # Display the Matplotlib figure using Streamlit
+    st.pyplot()
 
 # Function to get node labels for the graph
 def get_node_labels(graph):
