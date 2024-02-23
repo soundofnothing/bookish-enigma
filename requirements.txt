@@ -1,0 +1,7 @@
+numpy
+cython
+igraph
+networkx
+matplotlib
+cryptography
+streamlit
