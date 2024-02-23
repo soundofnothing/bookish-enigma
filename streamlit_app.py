@@ -2,7 +2,7 @@ import streamlit as st
 import ast
 import networkx as nx
 import matplotlib.pyplot as plt
-from pygraphviz import AGraph
+import pydot
 
 # Function to convert AST to a directed graph
 def ast_to_graph(node, graph=None):
@@ -37,18 +37,18 @@ def visualize_ast(code):
     parsed_code = ast.parse(code)
     ast_graph = ast_to_graph(parsed_code)
 
-    # Generate DOT format string using pygraphviz
-    dot = AGraph(directed=True)
+    # Generate DOT format string using pydot
+    dot = pydot.Dot(graph_type="digraph")
     for node in ast_graph.nodes:
-        dot.add_node(node, label=str(ast_graph.nodes[node]['label']))
+        label = ast_graph.nodes[node]['label']
+        dot.add_node(pydot.Node(node, label=label))
 
     for edge in ast_graph.edges:
-        dot.add_edge(edge[0], edge[1])
+        dot.add_edge(pydot.Edge(edge[0], edge[1]))
 
     # Save the DOT string to a PNG file
     dot_path = "ast_graph"
-    dot.layout(prog="dot")
-    dot.draw(f"{dot_path}.png", format="png")
+    dot.write_png(f"{dot_path}.png")
 
     # Display the PNG image using Streamlit
     st.image(f"{dot_path}.png")
