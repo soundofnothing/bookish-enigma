@@ -2,6 +2,7 @@ import streamlit as st
 import ast
 import networkx as nx
 import matplotlib.pyplot as plt
+import inspect
 
 # Function to convert AST to a directed graph
 def ast_to_graph(node, graph=None, depth=2):
@@ -34,8 +35,18 @@ def get_node_label(node):
         return "If Statement"
     elif isinstance(node, ast.BinOp):
         return "Binary Operation"
+    elif isinstance(node, ast.Name):
+        return f"Name: {node.id}\nValue: {get_source_code(node)}"
     else:
         return type(node).__name__
+
+# Function to get the source code for a node using inspect
+def get_source_code(node):
+    try:
+        source_code = inspect.getsource(node)
+        return source_code.strip()
+    except (TypeError, IOError):
+        return "Source Code Unavailable"
 
 # Function to visualize the AST graph using Streamlit
 def visualize_ast(code, depth=2):
