@@ -6,3 +6,4 @@ matplotlib
 cryptography
 pygraphviz
 streamlit
+pydot
