@@ -2,7 +2,7 @@ import streamlit as st
 import ast
 import networkx as nx
 import matplotlib.pyplot as plt
-from streamlit import GraphvizChart
+from graphviz import Digraph
 
 # Function to convert AST to a directed graph
 def ast_to_graph(node, graph=None):
@@ -37,8 +37,20 @@ def visualize_ast(code):
     parsed_code = ast.parse(code)
     ast_graph = ast_to_graph(parsed_code)
 
-    # Visualize the graph using Streamlit
-    st.graphviz_chart(nx.drawing.nx_pydot.to_pydot(ast_graph).to_string())
+    # Generate DOT format string using Graphviz
+    dot = Digraph(format='png')
+    for node in ast_graph.nodes:
+        dot.node(str(node), label=str(ast_graph.nodes[node]['label']))
+
+    for edge in ast_graph.edges:
+        dot.edge(str(edge[0]), str(edge[1]))
+
+    # Save the DOT string to a PNG file
+    dot_path = "ast_graph"
+    dot.render(dot_path, format='png', cleanup=True)
+
+    # Display the PNG image using Streamlit
+    st.image(f"{dot_path}.png")
 
 # Streamlit UI
 st.title("Euclidean Division Algorithm Analysis")
