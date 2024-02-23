@@ -4,15 +4,18 @@ import networkx as nx
 import matplotlib.pyplot as plt
 
 # Function to convert AST to a directed graph
-def ast_to_graph(node, graph=None):
+def ast_to_graph(node, graph=None, depth=2):
     if graph is None:
         graph = nx.DiGraph()
+
+    if depth == 0:
+        return graph
 
     graph.add_node(id(node), label=get_node_label(node))
 
     for child_node in ast.iter_child_nodes(node):
         graph.add_edge(id(node), id(child_node))
-        ast_to_graph(child_node, graph)
+        ast_to_graph(child_node, graph, depth=depth-1)
 
     return graph
 
@@ -32,9 +35,9 @@ def get_node_label(node):
         return type(node).__name__
 
 # Function to visualize the AST graph using Streamlit
-def visualize_ast(code):
+def visualize_ast(code, depth=2):
     parsed_code = ast.parse(code)
-    ast_graph = ast_to_graph(parsed_code)
+    ast_graph = ast_to_graph(parsed_code, depth=depth)
 
     # Draw the graph using Matplotlib
     pos = nx.spring_layout(ast_graph)
@@ -62,6 +65,9 @@ def euclidean_division(a, b):
     return a
 """)
 
+# Depth input area
+depth_input = st.slider("Select AST Depth", min_value=1, max_value=5, value=2)
+
 # Button to visualize the AST graph
 if st.button("Visualize AST"):
-    visualize_ast(code_input)
+    visualize_ast(code_input, depth=depth_input)
