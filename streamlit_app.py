@@ -11,10 +11,13 @@ def ast_to_graph(node, graph=None, depth=2):
     if depth == 0:
         return graph
 
-    graph.add_node(id(node), label=get_node_label(node))
+    node_id = id(node)
+    label = get_node_label(node)
+    graph.add_node(node_id, label=label)
 
     for child_node in ast.iter_child_nodes(node):
-        graph.add_edge(id(node), id(child_node))
+        child_id = id(child_node)
+        graph.add_edge(node_id, child_id)
         ast_to_graph(child_node, graph, depth=depth-1)
 
     return graph
@@ -41,7 +44,6 @@ def visualize_ast(code, depth=2):
 
     # Draw the graph using Matplotlib
     pos = nx.spring_layout(ast_graph)
-    labels = nx.get_edge_attributes(ast_graph, 'label')
     
     plt.figure(figsize=(10, 6))
     nx.draw(ast_graph, pos, with_labels=True, labels=get_node_labels(ast_graph), font_size=8, font_color="black", font_weight="bold", arrowsize=10)
@@ -51,7 +53,7 @@ def visualize_ast(code, depth=2):
 def get_node_labels(graph):
     labels = {}
     for node in graph.nodes:
-        labels[node] = str(graph.nodes[node]['label'])
+        labels[node] = str(graph.nodes[node].get('label', ''))
     return labels
 
 # Streamlit UI
